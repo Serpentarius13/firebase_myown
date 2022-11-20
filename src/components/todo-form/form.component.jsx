@@ -3,6 +3,10 @@ import { addTodo } from "../../utils/firebase.util";
 import { useState } from "react";
 import { updateTodo } from "../../utils/firebase.util";
 
+import FileLinksBox from "../file-links-box/file-links-box.component";
+
+import { uploadFile, getFileUrl } from "../../utils/firebase.util";
+
 const TodoForm = {
   name: "",
   description: "",
@@ -19,7 +23,7 @@ const FormComponent = ({ item = null }) => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-    const deadline = `${date} ${time}:00`;
+    const deadline = `${date} ${time}`;
     if (new Date(deadline) < new Date()) {
       alert("No deadlines for the past!");
       return;
@@ -53,43 +57,75 @@ const FormComponent = ({ item = null }) => {
 
     setFormState({ ...formState, [name]: value });
   };
-  return (
-    <form className="form-send" onSubmit={onSubmitHandler}>
-      <input
-        type="text"
-        name="name"
-        value={name}
-        placeholder="Todo name"
-        required
-        onChange={onChangeHandler}
-      />
-      <input
-        type="text"
-        name="description"
-        value={description}
-        placeholder="Todo description"
-        required
-        onChange={onChangeHandler}
-      />
-      <input
-        type="date"
-        name="date"
-        value={date}
-        placeholder="Deadline date"
-        required
-        onChange={onChangeHandler}
-      />
-      <input
-        type="time"
-        name="time"
-        value={time}
-        placeholder="Deadline time"
-        required
-        onChange={onChangeHandler}
-      />
 
-      <button type="submit"> Add todo </button>
-    </form>
+  const submitFileHandler = async (event) => {
+    event.preventDefault();
+
+    const file = event.target[0].files[0];
+
+    const fileName = file.name;
+    await uploadFile(file);
+    const url = await getFileUrl(fileName);
+
+    setFormState({ ...formState, docs: [...docs, { fileName, url }] });
+  };
+
+  return (
+    <div className="form-send">
+      <form onSubmit={onSubmitHandler}>
+        <input
+          type="text"
+          name="name"
+          value={name}
+          placeholder="Todo name"
+          required
+          onChange={onChangeHandler}
+        />
+        <textarea
+          name="description"
+          value={description}
+          placeholder="Todo description"
+          required
+          onChange={onChangeHandler}
+        />
+        <input
+          type="date"
+          name="date"
+          value={date}
+          placeholder="Deadline date"
+          required
+          onChange={onChangeHandler}
+        />
+        <input
+          type="time"
+          name="time"
+          value={time}
+          placeholder="Deadline time"
+          required
+          onChange={onChangeHandler}
+        />
+
+        <button type="submit"> Add todo </button>
+      </form>
+
+      <form className="file-form" onSubmit={submitFileHandler}>
+        {" "}
+        <input type="file" />{" "}
+        <div className="submit-file">
+          <button type="submit"> Submit </button>{" "}
+          <div className="files">
+            {docs.length > 0
+              ? docs.map(({ fileName, url }) => (
+                  <a target="_blank" key={Math.random() * 10000} href={url}>
+                    {" "}
+                    <img className="file-image" src={url} alt={fileName} />
+                  </a>
+                ))
+              : ""}
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 

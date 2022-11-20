@@ -2,9 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import "./todo-item.style.less";
 import { getFileUrl, removeTodo } from "../../utils/firebase.util";
 import FormComponent from "../todo-form/form.component";
-import FileForm from "../file-form/file-form.component";
+import FileLinksBox from "../file-links-box/file-links-box.component";
+import TodoItemTemplate from "../item-template/todo-item.template";
 
-const TodoItem = ({ item }) => {
+const TodosContainer = ({ item }) => {
   const { name, description, deadline, docs } = item.data();
   const { id } = item;
   const [date, time] = deadline.split(" ");
@@ -15,10 +16,9 @@ const TodoItem = ({ item }) => {
   const [editing, setEditing] = useState(false);
 
   const checkDeadline = useCallback(() => {
-    const checkDate = new Date() < new Date(date);
-    const checkTime = new Date().toTimeString().split(" ")[0] < time;
+    const checkDate = new Date().getTime() <= new Date(deadline).getTime()
 
-    if (!checkDate || (!checkDate && !checkTime)) return false;
+    if (!checkDate) return false;
 
     return true;
   }, []);
@@ -36,37 +36,28 @@ const TodoItem = ({ item }) => {
     setEditing(true);
   };
 
+  const props = { name, description, deadline, deleteTodo, updateTodo, docs };
+
   return (
-    <>
+    <div className="grid">
       {editing ? (
-        <FormComponent item={{ name, description, time, date, id }} />
+        <FormComponent item={{ name, description, time, date, id, docs }} />
       ) : (
-        <div className="todo-item-box">
-          <p> {name} </p>
-          <p> {description} </p>
-          <p style={checkDeadline() ? { color: "green" } : { color: "red" }}>
-            {deadline}
-          </p>
-          <button onClick={deleteTodo}> delete </button>
-          <button onClick={updateTodo}> update todo</button>
-          {docs.length > 0 ? (
-            <div className="file-images">
-              {" "}
-              {docs.map(({ name, url }) => (
-                <a target="_blank" key={Math.random() * 10000} href={url}>
-                  {" "}
-                  <img className="file-image" src={url} alt={name} />
-                </a>
-              ))}{" "}
-            </div>
-          ) : (
-            ""
-          )}
-          <FileForm id={id}></FileForm>
-        </div>
+
+        <TodoItemTemplate item={props}></TodoItemTemplate>
+        // <div className="todo-item-box">
+        //   <p> {name} </p>
+        //   <p> {description} </p>
+        //   <p style={checkDeadline() ? { color: "green" } : { color: "red" }}>
+        //     {deadline}
+        //   </p>
+        //   <button onClick={deleteTodo}> delete </button>
+        //   <button onClick={updateTodo}> update todo</button>
+        //   {docs.length > 0 ? <FileLinksBox docs={docs} /> : ""}
+        // </div>
       )}
-    </>
+    </div>
   );
 };
 
-export default TodoItem;
+export default TodosContainer;
