@@ -20,6 +20,8 @@ const FormComponent = ({ item = null }) => {
 
   const { name, description, date, time, docs } = formState;
 
+  const buttonText = item ? 'Update todo' : 'Add todo'
+
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     const deadline = `${date} ${time}`;
@@ -69,15 +71,14 @@ const FormComponent = ({ item = null }) => {
     }
 
     const fileName = file.name;
-    console.log(fileName)
-    for(let i =0; i<docs.length; i++) {
-      if(docs[i].fileName === fileName) {
-        alert('You already have him');
+    console.log(fileName);
+    for (let i = 0; i < docs.length; i++) {
+      if (docs[i].fileName === fileName) {
+        alert("You already have him");
         return;
       }
     }
-
-
+    
     console.log(docs);
     await uploadFile(file);
     const url = await getFileUrl(fileName);
@@ -120,7 +121,7 @@ const FormComponent = ({ item = null }) => {
           onChange={onChangeHandler}
         />
 
-        <button type="submit"> Add todo </button>
+        <button type="submit"> {buttonText} </button>
       </form>
 
       <form className="file-form" onSubmit={submitFileHandler}>
@@ -133,7 +134,11 @@ const FormComponent = ({ item = null }) => {
               ? docs.map(({ fileName, url }) => (
                   <a target="_blank" key={Math.random() * 10000} href={url}>
                     {" "}
-                    <img className="file-image" src={url} alt={fileName} />
+                    <img
+                      className="file-image"
+                      src="/elonIcon.png"
+                      alt={fileName}
+                    />
                   </a>
                 ))
               : ""}

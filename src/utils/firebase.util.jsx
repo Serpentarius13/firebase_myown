@@ -64,7 +64,6 @@ export async function getTodo(id) {
 export async function removeTodo(id) {
   console.log("Deleting");
   const docRef = doc(db, "todos", id);
-  console.log(docRef);
   const deleted = await deleteDoc(docRef);
 }
 
@@ -77,7 +76,7 @@ export async function updateTodo(id, props) {
 }
 
 export async function deleteAll(todos) {
-  todos.forEach(async (todo) => {
+  await todos.forEach(async (todo) => {
     const docRef = doc(db, "todos", todo.id);
 
     await deleteDoc(docRef);
