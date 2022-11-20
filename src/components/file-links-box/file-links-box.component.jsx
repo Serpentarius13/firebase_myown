@@ -7,7 +7,7 @@ const FileLinksBox = ({ docs }) => {
       {docs.map(({ fileName, url }) => (
         <a target="_blank" key={Math.random() * 10000} href={url}>
           {" "}
-          <img className="file-image" src={url} alt={fileName} />
+          <img className="file-image" src="/elonIcon.png" alt={fileName} />
         </a>
       ))}{" "}
     </div>
