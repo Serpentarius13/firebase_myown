@@ -1,5 +1,6 @@
 import "./todo-item.template.styles.less";
 import { useState, useCallback } from "react";
+import axios from "axios";
 
 const TodoItemTemplate = ({ item }) => {
   const { name, description, deadline, deleteTodo, updateTodo, docs } = item;
@@ -30,6 +31,20 @@ const TodoItemTemplate = ({ item }) => {
     else setButtonText("Open file section");
   };
 
+  async function download(url, fileName) {
+    const image = await fetch(url);
+    const imageBlob = await image.blob();
+
+    const imageUrl = URL.createObjectURL(imageBlob);
+
+    const link = document.createElement("a");
+    link.href = imageUrl;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   return (
     <>
       <div className="todo-item-box">
@@ -37,14 +52,8 @@ const TodoItemTemplate = ({ item }) => {
           <h2> {name} </h2>
           <p> {description} lorem </p>
           <div className="buttons">
-            <button onClick={deleteTodo} >
-              {" "}
-              Delete{" "}
-            </button>
-            <button onClick={updateTodo}>
-              {" "}
-              Update{" "}
-            </button>
+            <button onClick={deleteTodo}> Delete </button>
+            <button onClick={updateTodo}> Update </button>
           </div>
         </div>
 
@@ -66,10 +75,9 @@ const TodoItemTemplate = ({ item }) => {
             {" "}
             {docs.length > 0
               ? docs.map(({ url, fileName }) => (
-                  <li>
-                    {" "}
-                    Link for <b style={{fontSize: '24px'}}> {fileName} </b>:{" "}
-                    <a href={url}> Click me! </a>{" "}
+                  <li key={Math.random() * 123123}>
+                    Link for <b style={{ fontSize: "18px" }}>{fileName}</b>:{" "}
+                    <button onClick={(e) => download(url, fileName)}> Download </button>
                   </li>
                 ))
               : ""}

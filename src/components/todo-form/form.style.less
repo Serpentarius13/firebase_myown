@@ -1,14 +1,17 @@
 .form-send {
   width: 400px;
-  height: 400px;
+  height: 450px;
   padding: 12px;
-  border: 3px solid blue;
+
+  border: 2px solid black;
 
   position: relative;
 
   display: flex;
   flex-direction: column;
   gap: 12px;
+
+  background-color: white;
 
   & form {
     display: flex;
@@ -19,6 +22,7 @@
     & textarea {
       padding: 12px;
       flex: 35%;
+      outline: none;
     }
 
     & button {
@@ -32,7 +36,17 @@
     & input {
       width: 100%;
       border: 3px solid black;
-      flex: 10%;
+      height: 32px;
+      outline: none;
+      border: none;
+      border-bottom: 2px solid black;
+      padding: 4px;
+    }
+
+    & input:focus,
+    textarea:focus {
+      border: none;
+      outline: 2px dotted blue;
     }
   }
 }
@@ -44,9 +58,8 @@
   flex: 35%;
 }
 
-
 .submit-file {
-  display: flex;  
+  display: flex;
 
   justify-content: center;
   align-items: center;
@@ -70,14 +83,4 @@
 
     grid-template-columns: repeat(auto-fill, minmax(24px, 1fr));
   }
-}
-
-.form-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: black;
-  width: 120px;
-  height: 120px;
 }

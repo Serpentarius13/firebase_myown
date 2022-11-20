@@ -19,7 +19,6 @@ const FormComponent = ({ item = null }) => {
   const [formState, setFormState] = useState(item || TodoForm);
 
   const { name, description, date, time, docs } = formState;
-  console.log(formState);
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -36,6 +35,7 @@ const FormComponent = ({ item = null }) => {
         console.log("Submitting");
         await addTodo(todo);
         alert("Submitted!");
+        location.reload();
       } catch (err) {
         console.log(err);
       }
@@ -63,7 +63,22 @@ const FormComponent = ({ item = null }) => {
 
     const file = event.target[0].files[0];
 
+    if (!file) {
+      alert("Load it first!");
+      return;
+    }
+
     const fileName = file.name;
+    console.log(fileName)
+    for(let i =0; i<docs.length; i++) {
+      if(docs[i].fileName === fileName) {
+        alert('You already have him');
+        return;
+      }
+    }
+
+
+    console.log(docs);
     await uploadFile(file);
     const url = await getFileUrl(fileName);
 

@@ -10,8 +10,6 @@ const TodosContainer = ({ item }) => {
   const { id } = item;
   const [date, time] = deadline.split(" ");
 
-  console.log(deadline);
-  console.log(date, time);
 
   const [editing, setEditing] = useState(false);
 
@@ -25,8 +23,10 @@ const TodosContainer = ({ item }) => {
 
   const deleteTodo = useCallback(async () => {
     try {
+      console.log('Deleting')
       await removeTodo(id);
-      console.log("deleted");
+      alert('Deleted')
+      location.reload()
     } catch (err) {
       console.log(err);
     }

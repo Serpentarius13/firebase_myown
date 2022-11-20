@@ -49,7 +49,6 @@ export async function addTodo(todo) {
 export async function getAllTodos() {
   const q = query(TodoCollection);
   const arr = await getDocs(q);
-  console.log(arr);
   const newArr = [];
   arr.forEach((el) => newArr.push(el));
   return newArr;
@@ -75,6 +74,17 @@ export async function updateTodo(id, props) {
 
   const updated = await updateDoc(docRef, { ...props });
   return updated;
+}
+
+export async function deleteAll(todos) {
+  todos.forEach(async (todo) => {
+    const docRef = doc(db, "todos", todo.id);
+
+    await deleteDoc(docRef);
+  });
+
+  alert('Finished deleting');
+  return true;
 }
 
 const storage = getStorage();
