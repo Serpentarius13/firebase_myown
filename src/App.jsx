@@ -38,7 +38,13 @@ function App() {
         {" "}
         Create todo{" "}
       </button>
-      <button onClick={async () => await deleteAll(todos)} className="delete-all">
+      <button
+        onClick={async () => {
+          await deleteAll(todos);
+          location.reload();
+        }}
+        className="delete-all"
+      >
         {" "}
         Delete all todos{" "}
       </button>
