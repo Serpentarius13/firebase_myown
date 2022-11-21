@@ -24,7 +24,6 @@ const TodoItemTemplate = ({ item }) => {
     display: "none",
   });
 
-  
 
   /**
    * Boolean value to check if provided deadline in file is overdue or not (false - overdue, red; true - still intact, green)

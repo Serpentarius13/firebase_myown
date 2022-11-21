@@ -114,7 +114,6 @@ export async function updateTodoFirebase(id, props) {
  *
  * @param {*} todos - Fetched todos when the page is loaded initially
  */
-
 export async function deleteAll(todos) {
   await todos.forEach(async (todo) => {
     const docRef = doc(db, "todos", todo.id);

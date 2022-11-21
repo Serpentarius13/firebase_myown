@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/modal-form/modal-form.component.jsx</title>
+    <title>JSDoc: Source: context/state.context.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/modal-form/modal-form.component.jsx</h1>
+    <h1 class="page-title">Source: context/state.context.jsx</h1>
 
     
 
@@ -26,34 +26,43 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>
-import FormComponent from "../todo-form/form.component";
-import "./modal-form.styles.less";
+            <pre class="prettyprint source linenums"><code>import { useCallback } from "react";
+import { createContext, useState, useEffect } from "react";
+import { getAllTodos } from "../utils/firebase.util";
 
+const context = {
+  state: [],
+  stateHandler: () => null,
+  fetcher: () => null
+};
+
+export const StateContext = createContext(context);
 
 
 /**
- * A component to show Modal window with Form to create initial Todo
+ * A context to fetch data when app initializes plus refetch when it is necessary
  * 
- * @param state - Defines if the modal is opened or closed 
- * @param closeModal - Used to close the modal with button
- * @returns Modal form window
+ * @returns Context for fetching data
  */
-const ModalPopup = ({ state, closeModal }) => {
-  if (!state) return;
-  return (
-    &lt;div className="form-modal">
-      &lt;FormComponent> &lt;/FormComponent>
+export const StateContextProvider = ({ children }) => {
+  const [todos, setTodos] = useState([]);
 
-      &lt;button className="close-modal" onClick={closeModal}>
-        {" "}
-        X{" "}
-      &lt;/button>
-    &lt;/div>
+  const fetcher = useCallback(() => {
+    getAllTodos().then((res) => {
+      setTodos(res);
+    });
+  }, []);
+
+  useEffect(() => {
+    fetcher()
+  }, []);
+
+  const value = { todos, setTodos, fetcher};
+
+  return (
+    &lt;StateContext.Provider value={value}> {children} &lt;/StateContext.Provider>
   );
 };
-
-export default ModalPopup;
 </code></pre>
         </article>
     </section>

@@ -1,8 +1,16 @@
 import "./file-list.styles.less";
-import { updateTodoFirebase} from "../../utils/firebase.util";
+import { updateTodoFirebase } from "../../utils/firebase.util";
 import { useState, useContext } from "react";
 import { StateContext } from "../../context/state.context";
 
+
+/**
+ * A component to render list of Files attached to a todo
+ * 
+ * @param {Array} docs List of files itself
+ * @param {*} item for updating the document
+ * @returns Unordered list of items with two buttons in each <li> element
+ */
 const FileList = ({ docs, item }) => {
   const { name, description, deadline, deleteTodo, updateTodo, completed, id } =
     item;
@@ -30,6 +38,11 @@ const FileList = ({ docs, item }) => {
     document.body.removeChild(link);
   };
 
+  /**
+   * Deletes file from todo but not from storage. Because storage doesn't hold any duplicates, it is almost impossible to delete file just from one single todo and not hurt others that may posses the same file
+   *
+   * @param {*} fileName - Name of file to be deleted
+   */
   const removeFile = async (fileName) => {
     try {
       docs = docs.filter((doc) => doc.fileName !== fileName);

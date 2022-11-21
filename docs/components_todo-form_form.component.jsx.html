@@ -27,11 +27,16 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import "./form.style.less";
-import { addTodo } from "../../utils/firebase.util";
-import { useState } from "react";
-import { updateTodo } from "../../utils/firebase.util";
+import {
+  addTodo,
+  updateTodoFirebase,
+  uploadFile,
+  getFileUrl,
+} from "../../utils/firebase.util";
+import { useContext, useState } from "react";
 
-import { uploadFile, getFileUrl } from "../../utils/firebase.util";
+import FileList from "../item-list.component/file-list.component";
+import { StateContext } from "../../context/state.context";
 
 const TodoForm = {
   name: "",
@@ -54,6 +59,9 @@ const FormComponent = ({ item = null }) => {
   const { name, description, date, time, docs, completed } = formState;
 
   const buttonText = item ? "Update todo" : "Add todo";
+  const checkBoxText = completed ? "Uncomplete" : "Complete";
+
+  const { fetcher } = useContext(StateContext);
 
   /**
    * Main handler for form. It performs create/update operation
@@ -75,17 +83,18 @@ const FormComponent = ({ item = null }) => {
         console.log("Submitting");
         await addTodo(todo);
         alert("Submitted!");
-        location.reload();
+        fetcher();
+        setFormState(TodoForm);
       } catch (err) {
         console.log(err);
       }
     } else {
-      const { id } = formState;
       try {
+        const { id } = formState;
         console.log("Updating");
-        await updateTodo(id, todo);
+        await updateTodoFirebase(id, todo);
         alert("Updated!");
-        location.reload();
+        fetcher();
       } catch (err) {
         console.log(err);
       }
@@ -129,8 +138,11 @@ const FormComponent = ({ item = null }) => {
     }
 
     console.log(docs);
-    await uploadFile(file);
-    const url = await getFileUrl(fileName);
+    const url = await uploadFile(file).then(async (_) => {
+      return await getFileUrl(fileName);
+    });
+
+    console.log(url);
 
     setFormState({ ...formState, docs: [...docs, { fileName, url }] });
   };
@@ -179,37 +191,39 @@ const FormComponent = ({ item = null }) => {
           onChange={onChangeHandler}
         />
 
-        &lt;div className="checkbox-box">
-          {" "}
-          &lt;label> Complete &lt;/label>
-          &lt;input
-            className="checkbox"
-            type="checkbox"
-            onChange={onCheckbox}
-          >&lt;/input>
-        &lt;/div>
-
         &lt;button type="submit"> {buttonText} &lt;/button>
       &lt;/form>
 
+      &lt;div className="checkbox-box">
+        {" "}
+        &lt;button type="click" className="checkbox" onClick={onCheckbox}>
+          {" "}
+          {checkBoxText}{" "}
+        &lt;/button>
+      &lt;/div>
       &lt;form className="file-form" onSubmit={submitFileHandler}>
         {" "}
-        &lt;input type="file" />{" "}
+        &lt;input className="file-input" type="file" />{" "}
         &lt;div className="submit-file">
           &lt;button type="submit"> Submit &lt;/button>{" "}
           &lt;div className="files">
-            {docs.length > 0
-              ? docs.map(({ fileName, url }) => (
-                  &lt;a target="_blank" key={Math.random() * 10000} href={url}>
-                    {" "}
-                    &lt;img
-                      className="file-image"
-                      src="/elonIcon.png"
-                      alt={fileName}
-                    />
-                  &lt;/a>
-                ))
-              : ""}
+            {item ? (
+              &lt;FileList docs={docs} item={item} />
+            ) : (
+              &lt;ul className="file-list">
+                {" "}
+                {docs &amp;&amp;
+                  docs.map((doc) => (
+                    &lt;li
+                      style={{ fontWeight: 600, fontSize: "22px" }}
+                      key={Math.random() * 1232}
+                    >
+                      {" "}
+                      {doc.fileName}{" "}
+                    &lt;/li>
+                  ))}
+              &lt;/ul>
+            )}
           &lt;/div>
         &lt;/div>
       &lt;/form>
@@ -228,13 +242,13 @@ export default FormComponent;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#FormComponent">FormComponent</a></li><li><a href="global.html#ModalPopup">ModalPopup</a></li><li><a href="global.html#TodoItemTemplate">TodoItemTemplate</a></li><li><a href="global.html#TodoRender">TodoRender</a></li><li><a href="global.html#TodosContainer">TodosContainer</a></li><li><a href="global.html#addTodo">addTodo</a></li><li><a href="global.html#deleteAll">deleteAll</a></li><li><a href="global.html#getAllTodos">getAllTodos</a></li><li><a href="global.html#getFileUrl">getFileUrl</a></li><li><a href="global.html#getTodo">getTodo</a></li><li><a href="global.html#removeTodo">removeTodo</a></li><li><a href="global.html#updateTodo">updateTodo</a></li><li><a href="global.html#uploadFile">uploadFile</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#FileList">FileList</a></li><li><a href="global.html#FormComponent">FormComponent</a></li><li><a href="global.html#ModalPopup">ModalPopup</a></li><li><a href="global.html#StateContextProvider">StateContextProvider</a></li><li><a href="global.html#TodoItemTemplate">TodoItemTemplate</a></li><li><a href="global.html#TodoRender">TodoRender</a></li><li><a href="global.html#TodosContainer">TodosContainer</a></li><li><a href="global.html#addTodo">addTodo</a></li><li><a href="global.html#deleteAll">deleteAll</a></li><li><a href="global.html#getAllTodos">getAllTodos</a></li><li><a href="global.html#getFileUrl">getFileUrl</a></li><li><a href="global.html#getTodo">getTodo</a></li><li><a href="global.html#removeTodo">removeTodo</a></li><li><a href="global.html#updateTodoFirebase">updateTodoFirebase</a></li><li><a href="global.html#uploadFile">uploadFile</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Mon Nov 21 2022 04:00:47 GMT+0300 (Москва, стандартное время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Mon Nov 21 2022 18:34:21 GMT+0300 (Москва, стандартное время)
 </footer>
 
 <script> prettyPrint(); </script>

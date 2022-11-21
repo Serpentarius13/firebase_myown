@@ -10,6 +10,12 @@ const context = {
 
 export const StateContext = createContext(context);
 
+
+/**
+ * A context to fetch data when app initializes plus refetch when it is necessary
+ * 
+ * @returns Context for fetching data
+ */
 export const StateContextProvider = ({ children }) => {
   const [todos, setTodos] = useState([]);
 
