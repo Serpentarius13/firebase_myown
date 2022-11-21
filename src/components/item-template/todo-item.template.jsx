@@ -1,6 +1,5 @@
 import "./todo-item.template.styles.less";
 import { useState, useCallback } from "react";
-import axios from "axios";
 
 /**
  * A component that provides the template to render todo item
