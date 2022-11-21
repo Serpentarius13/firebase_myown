@@ -167,7 +167,7 @@ const FormComponent = ({ item = null }) => {
 
       <form className="file-form" onSubmit={submitFileHandler}>
         {" "}
-        <input type="file" />{" "}
+        <input className="file-input" type="file" />{" "}
         <div className="submit-file">
           <button type="submit"> Submit </button>{" "}
           <div className="files">
