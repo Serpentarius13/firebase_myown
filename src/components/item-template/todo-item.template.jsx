@@ -9,7 +9,15 @@ import axios from "axios";
  * @returns Cool template of todo item
  */
 const TodoItemTemplate = ({ item }) => {
-  const { name, description, deadline, deleteTodo, updateTodo, docs } = item;
+  const {
+    name,
+    description,
+    deadline,
+    deleteTodo,
+    updateTodo,
+    docs,
+    completed,
+  } = item;
 
   const [date, time] = deadline.split(" ");
 
@@ -24,7 +32,9 @@ const TodoItemTemplate = ({ item }) => {
   /**
    * Boolean value to check if provided deadline in file is overdue or not (false - overdue, red; true - still intact, green)
    */
-  const checkDeadline = new Date().getTime() <= new Date(deadline).getTime();
+  const checkDeadline = completed
+    ? true
+    : new Date().getTime() <= new Date(deadline).getTime();
 
   /**
    * Turns and removes file list visibility (setting the state to opposite)
@@ -44,7 +54,7 @@ const TodoItemTemplate = ({ item }) => {
    * @param {string} fileName - name that will be used to name the downloaded file
    * @returns Downloaded file to your computer
    */
-  const download = async  (url, fileName) => {
+  const download = async (url, fileName) => {
     const image = await fetch(url);
     const imageBlob = await image.blob();
 
@@ -56,7 +66,7 @@ const TodoItemTemplate = ({ item }) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }
+  };
 
   return (
     <>
@@ -81,7 +91,11 @@ const TodoItemTemplate = ({ item }) => {
           }
         >
           {" "}
-          {date} {time}{" "}
+          {completed
+            ? "completed"
+            : checkDeadline
+            ? `${date} ${time}`
+            : "failed"}{" "}
         </div>
         <div className="file-list" style={style}>
           <ul>

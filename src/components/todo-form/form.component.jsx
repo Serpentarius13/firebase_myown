@@ -11,6 +11,7 @@ const TodoForm = {
   date: "",
   time: "",
   docs: [],
+  completed: false,
 };
 
 /**
@@ -22,7 +23,7 @@ const TodoForm = {
 const FormComponent = ({ item = null }) => {
   const [formState, setFormState] = useState(item || TodoForm);
 
-  const { name, description, date, time, docs } = formState;
+  const { name, description, date, time, docs, completed } = formState;
 
   const buttonText = item ? "Update todo" : "Add todo";
 
@@ -39,7 +40,7 @@ const FormComponent = ({ item = null }) => {
       return;
     }
 
-    const todo = { name, description, deadline, docs };
+    const todo = { name, description, deadline, docs, completed };
 
     if (!item) {
       try {
@@ -106,6 +107,15 @@ const FormComponent = ({ item = null }) => {
     setFormState({ ...formState, docs: [...docs, { fileName, url }] });
   };
 
+  /**
+   * Changes value of completion to the opposite as checkbox clicks
+   *
+   * @param {*} event Accepts checkbox change just for the sake of it
+   */
+  const onCheckbox = (event) => {
+    setFormState({ ...formState, completed: !completed });
+  };
+
   return (
     <div className="form-send">
       <form onSubmit={onSubmitHandler}>
@@ -140,6 +150,16 @@ const FormComponent = ({ item = null }) => {
           required
           onChange={onChangeHandler}
         />
+
+        <div className="checkbox-box">
+          {" "}
+          <label> Complete </label>
+          <input
+            className="checkbox"
+            type="checkbox"
+            onChange={onCheckbox}
+          ></input>
+        </div>
 
         <button type="submit"> {buttonText} </button>
       </form>
