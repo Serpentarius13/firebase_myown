@@ -17,7 +17,6 @@ const TodoItemTemplate = ({ item }) => {
     docs,
     completed,
   } = item;
-
   const [date, time] = deadline.split(" ");
 
   const [buttonText, setButtonText] = useState("Open file section");

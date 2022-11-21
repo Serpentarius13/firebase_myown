@@ -49,6 +49,7 @@ const TodosContainer = ({ item }) => {
     docs,
     completed,
   };
+
   return (
     <div className="grid">
       {editing ? (

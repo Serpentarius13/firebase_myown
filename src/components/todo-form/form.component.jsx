@@ -26,6 +26,7 @@ const FormComponent = ({ item = null }) => {
   const { name, description, date, time, docs, completed } = formState;
 
   const buttonText = item ? "Update todo" : "Add todo";
+  const checkBoxText = completed ? "Uncomplete" : "Complete";
 
   /**
    * Main handler for form. It performs create/update operation
@@ -153,7 +154,7 @@ const FormComponent = ({ item = null }) => {
 
         <div className="checkbox-box">
           {" "}
-          <label> Complete </label>
+          <label> {checkBoxText} </label>
           <input
             className="checkbox"
             type="checkbox"
