@@ -1,5 +1,6 @@
 import "./todo-item.template.styles.less";
 import { useState, useCallback } from "react";
+import FileList from "../file-list/file-list.component";
 
 /**
  * A component that provides the template to render todo item
@@ -8,15 +9,11 @@ import { useState, useCallback } from "react";
  * @returns Cool template of todo item
  */
 const TodoItemTemplate = ({ item }) => {
-  const {
-    name,
-    description,
-    deadline,
-    deleteTodo,
-    updateTodo,
-    docs,
-    completed,
-  } = item;
+  const { name, description, deadline, deleteTodo, updateTodo, completed, id } =
+    item;
+
+  let { docs } = item;
+
   const [date, time] = deadline.split(" ");
 
   const [buttonText, setButtonText] = useState("Open file section");
@@ -26,6 +23,8 @@ const TodoItemTemplate = ({ item }) => {
     opacity: 0,
     display: "none",
   });
+
+  const [state, updState] = useState([]);
 
   /**
    * Boolean value to check if provided deadline in file is overdue or not (false - overdue, red; true - still intact, green)
@@ -43,27 +42,6 @@ const TodoItemTemplate = ({ item }) => {
 
     if (buttonText === "Open file section") setButtonText("Close file section");
     else setButtonText("Open file section");
-  };
-
-  /**
-   * This thing is a very genius of human thought and creativeness. It downloads the file from provided url as provided fileName.
-   *
-   * @param {string} url - url of Firestorage item location
-   * @param {string} fileName - name that will be used to name the downloaded file
-   * @returns Downloaded file to your computer
-   */
-  const download = async (url, fileName) => {
-    const image = await fetch(url);
-    const imageBlob = await image.blob();
-
-    const imageUrl = URL.createObjectURL(imageBlob);
-
-    const link = document.createElement("a");
-    link.href = imageUrl;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   return (
@@ -96,20 +74,7 @@ const TodoItemTemplate = ({ item }) => {
             : "failed"}{" "}
         </div>
         <div className="file-list" style={style}>
-          <ul>
-            {" "}
-            {docs.length > 0
-              ? docs.map(({ url, fileName }) => (
-                  <li key={Math.random() * 123123}>
-                    Link for <b style={{ fontSize: "18px" }}>{fileName}</b>:{" "}
-                    <button onClick={(e) => download(url, fileName)}>
-                      {" "}
-                      Download{" "}
-                    </button>
-                  </li>
-                ))
-              : ""}
-          </ul>
+          <FileList docs={docs} item={item} state={updState} />
         </div>
       </div>
     </>

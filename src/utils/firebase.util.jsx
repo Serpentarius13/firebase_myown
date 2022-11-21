@@ -19,6 +19,7 @@ import {
   uploadBytes,
   uploadBytesResumable,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -101,7 +102,7 @@ export async function removeTodo(id) {
  * @param {*} props - new state with which todo is updated
  */
 
-export async function updateTodo(id, props) {
+export async function updateTodoFirebase(id, props) {
   console.log("Updating");
   const docRef = doc(db, "todos", id);
 
@@ -135,25 +136,7 @@ const storage = getStorage();
  */
 export async function uploadFile(file) {
   const fileRef = ref(storage, file.name);
-  const uploadTask = uploadBytesResumable(fileRef, file);
-  uploadTask.on(
-    "state_changed",
-    (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log("Uploading at " + progress);
-      switch (snapshot.state) {
-        case "paused":
-          console.log("Upload is paused");
-          break;
-        case "running":
-          console.log("Upload is running");
-          break;
-      }
-    },
-    (err) => {
-      console.log(err);
-    }
-  );
+  const uploadTask = await uploadBytes(fileRef, file);
 }
 
 /**
@@ -167,4 +150,10 @@ export async function getFileUrl(fileName) {
   const url = await getDownloadURL(fileRef);
 
   return url;
+}
+
+export function deleteFile(fileName) {
+  console.log(fileName);
+  const fileRef = ref(storage, fileName);
+  deleteObject(fileRef);
 }

@@ -1,9 +1,13 @@
 import "./form.style.less";
-import { addTodo } from "../../utils/firebase.util";
+import {
+  addTodo,
+  updateTodoFirebase,
+  uploadFile,
+  getFileUrl,
+} from "../../utils/firebase.util";
 import { useState } from "react";
-import { updateTodo } from "../../utils/firebase.util";
 
-import { uploadFile, getFileUrl } from "../../utils/firebase.util";
+import FileList from "../file-list/file-list.component";
 
 const TodoForm = {
   name: "",
@@ -53,10 +57,10 @@ const FormComponent = ({ item = null }) => {
         console.log(err);
       }
     } else {
-      const { id } = formState;
       try {
+        const { id } = formState;
         console.log("Updating");
-        await updateTodo(id, todo);
+        await updateTodoFirebase(id, todo);
         alert("Updated!");
         location.reload();
       } catch (err) {
@@ -102,8 +106,11 @@ const FormComponent = ({ item = null }) => {
     }
 
     console.log(docs);
-    await uploadFile(file);
-    const url = await getFileUrl(fileName);
+    const url = await uploadFile(file).then(async (_) => {
+      return await getFileUrl(fileName);
+    });
+
+    console.log(url);
 
     setFormState({ ...formState, docs: [...docs, { fileName, url }] });
   };
@@ -168,7 +175,8 @@ const FormComponent = ({ item = null }) => {
         <div className="submit-file">
           <button type="submit"> Submit </button>{" "}
           <div className="files">
-            {docs.length > 0
+            <FileList docs={docs} item={item} />
+            {/* {docs.length > 0
               ? docs.map(({ fileName, url }) => (
                   <a target="_blank" key={Math.random() * 10000} href={url}>
                     {" "}
@@ -179,7 +187,7 @@ const FormComponent = ({ item = null }) => {
                     />
                   </a>
                 ))
-              : ""}
+              : ""} */}
           </div>
         </div>
       </form>

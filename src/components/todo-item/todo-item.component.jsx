@@ -3,6 +3,7 @@ import "./todo-item.style.less";
 import { getFileUrl, removeTodo } from "../../utils/firebase.util";
 import FormComponent from "../todo-form/form.component";
 
+
 import TodoItemTemplate from "../item-template/todo-item.template";
 
 /**
@@ -48,6 +49,7 @@ const TodosContainer = ({ item }) => {
     updateTodo,
     docs,
     completed,
+    id
   };
 
   return (
