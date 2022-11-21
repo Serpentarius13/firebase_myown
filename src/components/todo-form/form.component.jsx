@@ -152,19 +152,16 @@ const FormComponent = ({ item = null }) => {
           onChange={onChangeHandler}
         />
 
-        <div className="checkbox-box">
-          {" "}
-          <label> {checkBoxText} </label>
-          <input
-            className="checkbox"
-            type="checkbox"
-            onChange={onCheckbox}
-          ></input>
-        </div>
-
         <button type="submit"> {buttonText} </button>
       </form>
 
+      <div className="checkbox-box">
+        {" "}
+        <button type="click" className="checkbox" onClick={onCheckbox}>
+          {" "}
+          {checkBoxText}{" "}
+        </button>
+      </div>
       <form className="file-form" onSubmit={submitFileHandler}>
         {" "}
         <input className="file-input" type="file" />{" "}

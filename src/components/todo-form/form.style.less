@@ -47,15 +47,7 @@
       border: none;
     }
 
-    & .checkbox-box {
-      display: flex;
-      gap: 12px;
-      & .checkbox {
-        width: 20px;
-        height: 20px;
-      }
-    }
-
+    
     & input:focus,
     textarea:focus {
       border: none;
@@ -64,6 +56,15 @@
   }
 }
 
+.checkbox-box {
+  & .checkbox {
+    width: 50%;
+    height: 32px;
+    padding: 8px 4px;
+    background-color: blue;
+    color: white;
+  }
+}
 .file-form {
   display: flex;
   flex-direction: column;
