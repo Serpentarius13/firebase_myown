@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/todo-form/form.component.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/todo-form/form.component.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import "./form.style.less";
+import { addTodo } from "../../utils/firebase.util";
+import { useState } from "react";
+import { updateTodo } from "../../utils/firebase.util";
+
+import { uploadFile, getFileUrl } from "../../utils/firebase.util";
+
+const TodoForm = {
+  name: "",
+  description: "",
+  date: "",
+  time: "",
+  docs: [],
+};
+
+/**
+ * A component with Form for interacting with Google Firebase to create todos
+ *
+ * @param item - If that parameter is provided, this component is executed for updating, default: 'null'
+ * @returns {*} Form component for creating/updating todo items
+ */
+const FormComponent = ({ item = null }) => {
+  const [formState, setFormState] = useState(item || TodoForm);
+
+  const { name, description, date, time, docs } = formState;
+
+  const buttonText = item ? "Update todo" : "Add todo";
+
+  /**
+   * Main handler for form. It performs create/update operation
+   *
+   * @param {*} event - Event to stop window reloading
+   */
+  const onSubmitHandler = async (event) => {
+    event.preventDefault();
+    const deadline = `${date} ${time}`;
+    if (new Date(deadline) &lt; new Date()) {
+      alert("No deadlines for the past!");
+      return;
+    }
+
+    const todo = { name, description, deadline, docs };
+
+    if (!item) {
+      try {
+        console.log("Submitting");
+        await addTodo(todo);
+        alert("Submitted!");
+        location.reload();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      const { id } = formState;
+      try {
+        console.log("Updating");
+        await updateTodo(id, todo);
+        alert("Updated!");
+        location.reload();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  /**
+   * Generalized input handler that works with name and value property of each input to update state accordingly
+   *
+   * @param {*} event - Input onChange event
+   */
+  const onChangeHandler = (event) => {
+    const { name, value } = event.target;
+
+    setFormState({ ...formState, [name]: value });
+  };
+
+  /**
+   * Submit handler for files. Checks if there's file, if todo already has this file (checks by fileName). If not, uploads file and updates state with new object {fileName, url}
+   *
+   * @param {*} event - FileInput onChange event
+   *
+   */
+  const submitFileHandler = async (event) => {
+    event.preventDefault();
+
+    const file = event.target[0].files[0];
+
+    if (!file) {
+      alert("Load it first!");
+      return;
+    }
+
+    const fileName = file.name;
+    console.log(fileName);
+    for (let i = 0; i &lt; docs.length; i++) {
+      if (docs[i].fileName === fileName) {
+        alert("You already have him");
+        return;
+      }
+    }
+
+    console.log(docs);
+    await uploadFile(file);
+    const url = await getFileUrl(fileName);
+
+    setFormState({ ...formState, docs: [...docs, { fileName, url }] });
+  };
+
+  return (
+    &lt;div className="form-send">
+      &lt;form onSubmit={onSubmitHandler}>
+        &lt;input
+          type="text"
+          name="name"
+          value={name}
+          placeholder="Todo name"
+          required
+          onChange={onChangeHandler}
+        />
+        &lt;textarea
+          name="description"
+          value={description}
+          placeholder="Todo description"
+          required
+          onChange={onChangeHandler}
+        />
+        &lt;input
+          type="date"
+          name="date"
+          value={date}
+          placeholder="Deadline date"
+          required
+          onChange={onChangeHandler}
+        />
+        &lt;input
+          type="time"
+          name="time"
+          value={time}
+          placeholder="Deadline time"
+          required
+          onChange={onChangeHandler}
+        />
+
+        &lt;button type="submit"> {buttonText} &lt;/button>
+      &lt;/form>
+
+      &lt;form className="file-form" onSubmit={submitFileHandler}>
+        {" "}
+        &lt;input type="file" />{" "}
+        &lt;div className="submit-file">
+          &lt;button type="submit"> Submit &lt;/button>{" "}
+          &lt;div className="files">
+            {docs.length > 0
+              ? docs.map(({ fileName, url }) => (
+                  &lt;a target="_blank" key={Math.random() * 10000} href={url}>
+                    {" "}
+                    &lt;img
+                      className="file-image"
+                      src="/elonIcon.png"
+                      alt={fileName}
+                    />
+                  &lt;/a>
+                ))
+              : ""}
+          &lt;/div>
+        &lt;/div>
+      &lt;/form>
+    &lt;/div>
+  );
+};
+
+export default FormComponent;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#FormComponent">FormComponent</a></li><li><a href="global.html#ModalPopup">ModalPopup</a></li><li><a href="global.html#TodoItemTemplate">TodoItemTemplate</a></li><li><a href="global.html#TodoRender">TodoRender</a></li><li><a href="global.html#TodosContainer">TodosContainer</a></li><li><a href="global.html#addTodo">addTodo</a></li><li><a href="global.html#deleteAll">deleteAll</a></li><li><a href="global.html#getAllTodos">getAllTodos</a></li><li><a href="global.html#getFileUrl">getFileUrl</a></li><li><a href="global.html#getTodo">getTodo</a></li><li><a href="global.html#removeTodo">removeTodo</a></li><li><a href="global.html#updateTodo">updateTodo</a></li><li><a href="global.html#uploadFile">uploadFile</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Mon Nov 21 2022 03:29:08 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

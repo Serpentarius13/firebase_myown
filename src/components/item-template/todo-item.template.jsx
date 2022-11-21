@@ -44,7 +44,7 @@ const TodoItemTemplate = ({ item }) => {
    * @param {string} fileName - name that will be used to name the downloaded file
    * @returns Downloaded file to your computer
    */
-  async function download(url, fileName) {
+  const download = async  (url, fileName) => {
     const image = await fetch(url);
     const imageBlob = await image.blob();
 

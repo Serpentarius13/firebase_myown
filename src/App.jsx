@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import "./App.less";
 import TodoItemTemplate from "./components/item-template/todo-item.template";
-import ModalPortal from "./components/modal-form/modal-form.portal";
 import FormComponent from "./components/todo-form/form.component";
 import TodoRender from "./components/todo-render/todo-render.component";
 
 import { deleteAll } from "./utils/firebase.util";
 
 import { getAllTodos } from "./utils/firebase.util";
+
+import ModalPopup from './components/modal-form/modal-form.component'
 
 /**
  *
@@ -29,14 +30,14 @@ function App() {
     <div className={modalState ? "window open" : "window"}>
       {" "}
       <TodoRender todos={todos}></TodoRender>
-      <ModalPortal
+      <ModalPopup
         state={modalState}
         closeModal={() => {
           setModalState(false);
         }}
       >
         {" "}
-      </ModalPortal>
+      </ModalPopup>
       <button
         onClick={() => setModalState(!modalState)}
         className="create-todo"

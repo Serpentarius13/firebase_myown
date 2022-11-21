@@ -11,7 +11,7 @@ import { ReactDOM } from "react";
  * @param closeModal - Used to close the modal with button
  * @returns Modal form window
  */
-const ModalPortal = ({ state, closeModal }) => {
+const ModalPopup = ({ state, closeModal }) => {
   if (!state) return;
   return (
     <div className="form-modal">
@@ -25,4 +25,4 @@ const ModalPortal = ({ state, closeModal }) => {
   );
 };
 
-export default ModalPortal;
+export default ModalPopup;
