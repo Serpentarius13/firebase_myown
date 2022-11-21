@@ -20,7 +20,7 @@ import { StateContext } from "./context/state.context";
 function App() {
   const [modalState, setModalState] = useState(false);
 
-  const { todos } = useContext(StateContext);
+  const { todos, fetcher } = useContext(StateContext);
   return (
     <div className={modalState ? "window open" : "window"}>
       {" "}
@@ -44,7 +44,7 @@ function App() {
         onClick={async () => {
           await deleteAll(todos);
 
-          setTimeout(() => location.reload(), 1000);
+          fetcher();
         }}
         className="delete-all"
       >

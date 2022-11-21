@@ -1,5 +1,5 @@
 import "./file-list.styles.less";
-import { updateTodoFirebase, deleteFile } from "../../utils/firebase.util";
+import { updateTodoFirebase} from "../../utils/firebase.util";
 import { useState, useContext } from "react";
 import { StateContext } from "../../context/state.context";
 
@@ -37,8 +37,6 @@ const FileList = ({ docs, item }) => {
       const obj = { name, description, deadline, completed, docs };
 
       await updateTodoFirebase(id, obj);
-      deleteFile(fileName);
-
       fetcher();
     } catch (err) {
       console.log(err);

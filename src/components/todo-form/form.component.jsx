@@ -56,6 +56,7 @@ const FormComponent = ({ item = null }) => {
         await addTodo(todo);
         alert("Submitted!");
         fetcher();
+        setFormState(TodoForm);
       } catch (err) {
         console.log(err);
       }
@@ -178,19 +179,23 @@ const FormComponent = ({ item = null }) => {
         <div className="submit-file">
           <button type="submit"> Submit </button>{" "}
           <div className="files">
-            {item ? <FileList docs={docs} item={item} /> : ""}
-            {/* {docs.length > 0
-              ? docs.map(({ fileName, url }) => (
-                  <a target="_blank" key={Math.random() * 10000} href={url}>
-                    {" "}
-                    <img
-                      className="file-image"
-                      src="/elonIcon.png"
-                      alt={fileName}
-                    />
-                  </a>
-                ))
-              : ""} */}
+            {item ? (
+              <FileList docs={docs} item={item} />
+            ) : (
+              <ul className="file-list">
+                {" "}
+                {docs &&
+                  docs.map((doc) => (
+                    <li
+                      style={{ fontWeight: 600, fontSize: "22px" }}
+                      key={Math.random() * 1232}
+                    >
+                      {" "}
+                      {doc.fileName}{" "}
+                    </li>
+                  ))}
+              </ul>
+            )}
           </div>
         </div>
       </form>

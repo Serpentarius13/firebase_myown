@@ -151,9 +151,3 @@ export async function getFileUrl(fileName) {
 
   return url;
 }
-
-export function deleteFile(fileName) {
-  console.log(fileName);
-  const fileRef = ref(storage, fileName);
-  deleteObject(fileRef);
-}
