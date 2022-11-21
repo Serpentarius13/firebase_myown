@@ -7,7 +7,8 @@ const FileList = ({ docs, item }) => {
   const { name, description, deadline, deleteTodo, updateTodo, completed, id } =
     item;
 
-  const { setTodos, todos } = useContext(StateContext);
+  const { fetcher } = useContext(StateContext);
+
   /**
    * This thing is a very genius of human thought and creativeness. It downloads the file from provided url as provided fileName.
    *
@@ -38,7 +39,7 @@ const FileList = ({ docs, item }) => {
       await updateTodoFirebase(id, obj);
       deleteFile(fileName);
 
-      setTodos([...todos]);
+      fetcher();
     } catch (err) {
       console.log(err);
       alert("Error deleting file");

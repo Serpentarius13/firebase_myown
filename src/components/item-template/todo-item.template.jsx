@@ -24,7 +24,7 @@ const TodoItemTemplate = ({ item }) => {
     display: "none",
   });
 
-  const [state, updState] = useState([]);
+  
 
   /**
    * Boolean value to check if provided deadline in file is overdue or not (false - overdue, red; true - still intact, green)
@@ -74,7 +74,7 @@ const TodoItemTemplate = ({ item }) => {
             : "failed"}{" "}
         </div>
         <div className="file-list" style={style}>
-          <FileList docs={docs} item={item} state={updState} />
+          <FileList docs={docs} item={item}  />
         </div>
       </div>
     </>

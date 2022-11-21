@@ -5,9 +5,10 @@ import {
   uploadFile,
   getFileUrl,
 } from "../../utils/firebase.util";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import FileList from "../item-list.component/file-list.component";
+import { StateContext } from "../../context/state.context";
 
 const TodoForm = {
   name: "",
@@ -32,6 +33,8 @@ const FormComponent = ({ item = null }) => {
   const buttonText = item ? "Update todo" : "Add todo";
   const checkBoxText = completed ? "Uncomplete" : "Complete";
 
+  const { fetcher } = useContext(StateContext);
+
   /**
    * Main handler for form. It performs create/update operation
    *
@@ -52,7 +55,7 @@ const FormComponent = ({ item = null }) => {
         console.log("Submitting");
         await addTodo(todo);
         alert("Submitted!");
-        location.reload();
+        fetcher();
       } catch (err) {
         console.log(err);
       }
@@ -62,7 +65,7 @@ const FormComponent = ({ item = null }) => {
         console.log("Updating");
         await updateTodoFirebase(id, todo);
         alert("Updated!");
-        location.reload();
+        fetcher();
       } catch (err) {
         console.log(err);
       }
@@ -175,7 +178,7 @@ const FormComponent = ({ item = null }) => {
         <div className="submit-file">
           <button type="submit"> Submit </button>{" "}
           <div className="files">
-            {item ? <FileList docs={docs} item={item} /> : ''}
+            {item ? <FileList docs={docs} item={item} /> : ""}
             {/* {docs.length > 0
               ? docs.map(({ fileName, url }) => (
                   <a target="_blank" key={Math.random() * 10000} href={url}>

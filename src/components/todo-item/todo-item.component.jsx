@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useContext } from "react";
 import "./todo-item.style.less";
 import { getFileUrl, removeTodo } from "../../utils/firebase.util";
 import FormComponent from "../todo-form/form.component";
 
-
 import TodoItemTemplate from "../item-template/todo-item.template";
+import { StateContext } from "../../context/state.context";
 
 /**
  * A component to render a single todo item
@@ -13,13 +13,15 @@ import TodoItemTemplate from "../item-template/todo-item.template";
  * @returns A single rendered todo item
  */
 const TodosContainer = ({ item }) => {
-  console.log
+  console.log;
   const { name, description, deadline, docs, completed } = item.data();
   const { id } = item;
 
   const [date, time] = deadline.split(" ");
 
   const [editing, setEditing] = useState(false);
+
+  const { fetcher } = useContext(StateContext);
 
   /**
    * Deletes current todo based on id provided in props's item
@@ -29,7 +31,7 @@ const TodosContainer = ({ item }) => {
       console.log("Deleting");
       await removeTodo(id);
       alert("Deleted");
-      location.reload();
+      fetcher();
     } catch (err) {
       console.log(err);
     }
@@ -39,7 +41,7 @@ const TodosContainer = ({ item }) => {
    * Shows form instead of todo item to update it
    */
   const updateTodo = () => {
-    setEditing(true);
+    setEditing((el) => !el);
   };
 
   const props = {
@@ -50,13 +52,15 @@ const TodosContainer = ({ item }) => {
     updateTodo,
     docs,
     completed,
-    id
+    id,
   };
 
   return (
     <div className="grid">
       {editing ? (
-        <FormComponent item={{ name, description, time, date, id, docs, completed }} />
+        <FormComponent
+          item={{ name, description, time, date, id, docs, completed }}
+        />
       ) : (
         <TodoItemTemplate item={props}></TodoItemTemplate>
         // <div className="todo-item-box">
