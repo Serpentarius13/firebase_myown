@@ -9,6 +9,11 @@ import { deleteAll } from "./utils/firebase.util";
 
 import { getAllTodos } from "./utils/firebase.util";
 
+/**
+ *
+ * Attention! This code is very, very bad! I advise you not to look at the thing I did (which was harsh as the first time, but pretty satisfying, though my vision is going to be at least -10 by the end of this year, I might become a "software developer"!)
+ */
+
 function App() {
   const [modalState, setModalState] = useState(false);
 
@@ -19,6 +24,7 @@ function App() {
       setTodos(res);
     });
   }, []);
+
   return (
     <div className={modalState ? "window open" : "window"}>
       {" "}
@@ -41,7 +47,8 @@ function App() {
       <button
         onClick={async () => {
           await deleteAll(todos);
-          location.reload();
+
+          setTimeout(() => location.reload(), 1000);
         }}
         className="delete-all"
       >

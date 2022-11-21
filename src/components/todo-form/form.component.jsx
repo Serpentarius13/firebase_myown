@@ -3,8 +3,6 @@ import { addTodo } from "../../utils/firebase.util";
 import { useState } from "react";
 import { updateTodo } from "../../utils/firebase.util";
 
-import FileLinksBox from "../file-links-box/file-links-box.component";
-
 import { uploadFile, getFileUrl } from "../../utils/firebase.util";
 
 const TodoForm = {
@@ -15,13 +13,24 @@ const TodoForm = {
   docs: [],
 };
 
+/**
+ * A component with Form for interacting with Google Firebase to create todos
+ *
+ * @param item - If that parameter is provided, this component is executed for updating, default: 'null'
+ * @returns {*} Form component for creating/updating todo items
+ */
 const FormComponent = ({ item = null }) => {
   const [formState, setFormState] = useState(item || TodoForm);
 
   const { name, description, date, time, docs } = formState;
 
-  const buttonText = item ? 'Update todo' : 'Add todo'
+  const buttonText = item ? "Update todo" : "Add todo";
 
+  /**
+   * Main handler for form. It performs create/update operation
+   *
+   * @param {*} event - Event to stop window reloading
+   */
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     const deadline = `${date} ${time}`;
@@ -54,12 +63,23 @@ const FormComponent = ({ item = null }) => {
     }
   };
 
+  /**
+   * Generalized input handler that works with name and value property of each input to update state accordingly
+   *
+   * @param {*} event - Input onChange event
+   */
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
 
     setFormState({ ...formState, [name]: value });
   };
 
+  /**
+   * Submit handler for files. Checks if there's file, if todo already has this file (checks by fileName). If not, uploads file and updates state with new object {fileName, url}
+   *
+   * @param {*} event - FileInput onChange event
+   *
+   */
   const submitFileHandler = async (event) => {
     event.preventDefault();
 
@@ -78,7 +98,7 @@ const FormComponent = ({ item = null }) => {
         return;
       }
     }
-    
+
     console.log(docs);
     await uploadFile(file);
     const url = await getFileUrl(fileName);

@@ -2,6 +2,12 @@ import "./todo-item.template.styles.less";
 import { useState, useCallback } from "react";
 import axios from "axios";
 
+/**
+ * A component that provides the template to render todo item
+ *
+ * @param {*} item - data to render todo item as a template
+ * @returns Cool template of todo item
+ */
 const TodoItemTemplate = ({ item }) => {
   const { name, description, deadline, deleteTodo, updateTodo, docs } = item;
 
@@ -15,14 +21,14 @@ const TodoItemTemplate = ({ item }) => {
     display: "none",
   });
 
-  const checkDeadline = useCallback(() => {
-    const checkDate = new Date().getTime() <= new Date(deadline).getTime();
+  /**
+   * Boolean value to check if provided deadline in file is overdue or not (false - overdue, red; true - still intact, green)
+   */
+  const checkDeadline = new Date().getTime() <= new Date(deadline).getTime();
 
-    if (!checkDate) return false;
-
-    return true;
-  }, []);
-
+  /**
+   * Turns and removes file list visibility (setting the state to opposite)
+   */
   const handleFiles = () => {
     if (style.visibility === 0) setStyle({ visibility: 1, opacity: 1 });
     else setStyle({ visibility: 0, opacity: 0, display: "none" });
@@ -31,6 +37,13 @@ const TodoItemTemplate = ({ item }) => {
     else setButtonText("Open file section");
   };
 
+  /**
+   * This thing is a very genius of human thought and creativeness. It downloads the file from provided url as provided fileName.
+   *
+   * @param {string} url - url of Firestorage item location
+   * @param {string} fileName - name that will be used to name the downloaded file
+   * @returns Downloaded file to your computer
+   */
   async function download(url, fileName) {
     const image = await fetch(url);
     const imageBlob = await image.blob();
@@ -64,7 +77,7 @@ const TodoItemTemplate = ({ item }) => {
         <div
           className="deadline"
           style={
-            checkDeadline() ? { borderColor: "green" } : { borderColor: "red" }
+            checkDeadline ? { borderColor: "green" } : { borderColor: "red" }
           }
         >
           {" "}
@@ -77,7 +90,10 @@ const TodoItemTemplate = ({ item }) => {
               ? docs.map(({ url, fileName }) => (
                   <li key={Math.random() * 123123}>
                     Link for <b style={{ fontSize: "18px" }}>{fileName}</b>:{" "}
-                    <button onClick={(e) => download(url, fileName)}> Download </button>
+                    <button onClick={(e) => download(url, fileName)}>
+                      {" "}
+                      Download{" "}
+                    </button>
                   </li>
                 ))
               : ""}

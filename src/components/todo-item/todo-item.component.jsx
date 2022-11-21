@@ -2,36 +2,39 @@ import { useCallback, useEffect, useState } from "react";
 import "./todo-item.style.less";
 import { getFileUrl, removeTodo } from "../../utils/firebase.util";
 import FormComponent from "../todo-form/form.component";
-import FileLinksBox from "../file-links-box/file-links-box.component";
+
 import TodoItemTemplate from "../item-template/todo-item.template";
 
+/**
+ * A component to render a single todo item
+ *
+ * @param {*} item - Firestore ref that is destructured with .data() and {id} later
+ * @returns A single rendered todo item
+ */
 const TodosContainer = ({ item }) => {
   const { name, description, deadline, docs } = item.data();
   const { id } = item;
   const [date, time] = deadline.split(" ");
 
-
   const [editing, setEditing] = useState(false);
 
-  const checkDeadline = useCallback(() => {
-    const checkDate = new Date().getTime() <= new Date(deadline).getTime()
-
-    if (!checkDate) return false;
-
-    return true;
-  }, []);
-
+  /**
+   * Deletes current todo based on id provided in props's item
+   */
   const deleteTodo = useCallback(async () => {
     try {
-      console.log('Deleting')
+      console.log("Deleting");
       await removeTodo(id);
-      alert('Deleted')
-      location.reload()
+      alert("Deleted");
+      location.reload();
     } catch (err) {
       console.log(err);
     }
   }, []);
 
+  /**
+   * Shows form instead of todo item to update it
+   */
   const updateTodo = () => {
     setEditing(true);
   };
@@ -43,7 +46,6 @@ const TodosContainer = ({ item }) => {
       {editing ? (
         <FormComponent item={{ name, description, time, date, id, docs }} />
       ) : (
-
         <TodoItemTemplate item={props}></TodoItemTemplate>
         // <div className="todo-item-box">
         //   <p> {name} </p>
