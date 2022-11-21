@@ -8,7 +8,9 @@ import { deleteAll } from "./utils/firebase.util";
 
 import { getAllTodos } from "./utils/firebase.util";
 
-import ModalPopup from './components/modal-form/modal-form.component'
+import ModalPopup from "./components/modal-form/modal-form.component";
+import { useContext } from "react";
+import { StateContext } from "./context/state.context";
 
 /**
  *
@@ -18,14 +20,7 @@ import ModalPopup from './components/modal-form/modal-form.component'
 function App() {
   const [modalState, setModalState] = useState(false);
 
-  const [todos, setTodos] = useState([]);
-
-  useEffect(() => {
-    getAllTodos().then((res) => {
-      setTodos(res);
-    });
-  }, []);
-
+  const { todos } = useContext(StateContext);
   return (
     <div className={modalState ? "window open" : "window"}>
       {" "}
