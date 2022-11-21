@@ -20,3 +20,4 @@
 - Working with forms and state in React
 - How to use Google firebase, interact with it, upload files
 - How to download files from links using Blobs
+- How to comment my code using JsDoc
