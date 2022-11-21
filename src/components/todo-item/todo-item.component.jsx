@@ -13,6 +13,7 @@ import TodoItemTemplate from "../item-template/todo-item.template";
  * @returns A single rendered todo item
  */
 const TodosContainer = ({ item }) => {
+  console.log
   const { name, description, deadline, docs, completed } = item.data();
   const { id } = item;
 

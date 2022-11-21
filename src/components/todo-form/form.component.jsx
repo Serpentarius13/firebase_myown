@@ -7,7 +7,7 @@ import {
 } from "../../utils/firebase.util";
 import { useState } from "react";
 
-import FileList from "../file-list/file-list.component";
+import FileList from "../item-list.component/file-list.component";
 
 const TodoForm = {
   name: "",
@@ -175,7 +175,7 @@ const FormComponent = ({ item = null }) => {
         <div className="submit-file">
           <button type="submit"> Submit </button>{" "}
           <div className="files">
-            <FileList docs={docs} item={item} />
+            {item ? <FileList docs={docs} item={item} /> : ''}
             {/* {docs.length > 0
               ? docs.map(({ fileName, url }) => (
                   <a target="_blank" key={Math.random() * 10000} href={url}>

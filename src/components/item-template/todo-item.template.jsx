@@ -1,6 +1,6 @@
 import "./todo-item.template.styles.less";
 import { useState, useCallback } from "react";
-import FileList from "../file-list/file-list.component";
+import FileList from "../item-list.component/file-list.component";
 
 /**
  * A component that provides the template to render todo item

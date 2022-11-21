@@ -1,12 +1,13 @@
 import "./file-list.styles.less";
 import { updateTodoFirebase, deleteFile } from "../../utils/firebase.util";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { StateContext } from "../../context/state.context";
 
 const FileList = ({ docs, item }) => {
   const { name, description, deadline, deleteTodo, updateTodo, completed, id } =
     item;
 
-  const [state, updState] = useState(false);
+  const { setTodos, todos } = useContext(StateContext);
   /**
    * This thing is a very genius of human thought and creativeness. It downloads the file from provided url as provided fileName.
    *
@@ -37,7 +38,7 @@ const FileList = ({ docs, item }) => {
       await updateTodoFirebase(id, obj);
       deleteFile(fileName);
 
-      updState(state => !state);
+      setTodos([...todos]);
     } catch (err) {
       console.log(err);
       alert("Error deleting file");
