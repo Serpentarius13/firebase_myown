@@ -48,7 +48,7 @@ const TodoItemTemplate = ({ item }) => {
       <div className="todo-item-box">
         <div className="todo-item-core">
           <h2> {name} </h2>
-          <p> {description} lorem </p>
+          <p> {description} </p>
           <div className="buttons">
             <button onClick={deleteTodo}> Delete </button>
             <button onClick={updateTodo}> Update </button>
